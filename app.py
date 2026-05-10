@@ -1,3 +1,4 @@
+import re
 import streamlit as st
 import pdfplumber
 import json
@@ -6,6 +7,7 @@ import time
 import io
 from groq import Groq
 from duckduckgo_search import DDGS
+
 
 st.set_page_config(
     page_title="Fact-Check Agent",
@@ -59,11 +61,11 @@ Rules:
 Return ONLY a valid JSON array. No markdown, no explanation.
 Format:
 [
-  {
+  {{
     "claim": "exact claim text with the specific figure",
     "category": "statistic | date | financial | technical | ranking",
     "search_query": "concise web search query to verify this claim"
-  }
+  }}
 ]
 
 TEXT:
@@ -72,13 +74,26 @@ TEXT:
 def extract_claims(client: Groq, text: str) -> list[dict]:
     prompt = EXTRACT_PROMPT.format(text=text[:5000])
     resp = client.chat.completions.create(
-        model="llama-3.1-8b-instant",
+        model="llama-3.3-70b-versatile",
         messages=[{"role": "user", "content": prompt}],
         temperature=0.1,
         max_tokens=2000,
     )
     raw = resp.choices[0].message.content.strip()
-    raw = raw.split("```json")[-1].split("```")[0].strip() if "```" in raw else raw
+
+    # Strip markdown fences if present
+    if "```" in raw:
+        raw = raw.split("```json")[-1].split("```")[0].strip()
+
+    # Find the JSON array — grab from first '[' to last ']'
+    start = raw.find("[")
+    end = raw.rfind("]")
+    if start == -1 or end == -1:
+        raise ValueError(f"No JSON array found in response: {raw[:200]}")
+    raw = raw[start:end+1]
+
+    # Remove trailing commas before ] or } (common LLM mistake)
+    raw = re.sub(r",\s*([\]}])", r"\1", raw)
     return json.loads(raw)
 
 
@@ -123,7 +138,7 @@ def verify_claim(client: Groq, claim: dict, search_results: list[dict]) -> dict:
         search_results=search_text[:3500],
     )
     resp = client.chat.completions.create(
-        model="llama-3.1-8b-instant",
+        model="llama-3.3-70b-versatile",
         messages=[{"role": "user", "content": prompt}],
         temperature=0.1,
         max_tokens=600,
