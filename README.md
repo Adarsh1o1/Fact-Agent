@@ -3,7 +3,8 @@
 A web app that reads a PDF, extracts verifiable claims, cross-references them against live web data, and flags each claim as **Verified**, **Inaccurate**, or **False**.
 
 ## Live Demo
-> Add your Streamlit Cloud URL here after deployment.
+
+> https://fact-agent.streamlit.app/
 
 ## How It Works
 
@@ -17,13 +18,13 @@ PDF Upload → Extract Text (pdfplumber)
 
 ## Free Stack
 
-| Component | Tool | Cost |
-|-----------|------|------|
-| LLM | [Groq](https://console.groq.com) (Llama 3.1 8B Instant) | Free |
-| Web Search | DuckDuckGo (`duckduckgo-search`) | Free, no key |
-| PDF Parsing | `pdfplumber` | Free |
-| Frontend | Streamlit | Free |
-| Hosting | Streamlit Cloud | Free |
+| Component   | Tool                                                    | Cost         |
+| ----------- | ------------------------------------------------------- | ------------ |
+| LLM         | [Groq](https://console.groq.com) (Llama 3.1 8B Instant) | Free         |
+| Web Search  | DuckDuckGo (`duckduckgo-search`)                        | Free, no key |
+| PDF Parsing | `pdfplumber`                                            | Free         |
+| Frontend    | Streamlit                                               | Free         |
+| Hosting     | Streamlit Cloud                                         | Free         |
 
 ## Local Setup
 
@@ -36,10 +37,9 @@ cd fact-check-agent
 pip install -r requirements.txt
 
 # 3. Run
-GROQ_API_KEY=your_key streamlit run app.py
+export GROQ_API_KEY=your_key
+streamlit run app.py
 ```
-
-Or enter the API key directly in the sidebar at runtime.
 
 ## Deploy to Streamlit Cloud (Free)
 
@@ -50,13 +50,6 @@ Or enter the API key directly in the sidebar at runtime.
    ```toml
    GROQ_API_KEY = "gsk_your_key_here"
    ```
-5. Click **Deploy** — you'll get a public URL in ~2 minutes.
+5. Click **Deploy**
 
-## Getting a Free Groq API Key
-
-1. Visit [console.groq.com](https://console.groq.com)
-2. Sign up (no credit card required)
-3. Go to **API Keys** → **Create API Key**
-4. Copy the key (starts with `gsk_`)
-
-Free tier limits: 14,400 requests/day, 30 requests/minute — more than enough for this app.
+Free tier limits: 14,400 requests/day, 30 requests/minute.

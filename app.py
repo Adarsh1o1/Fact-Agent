@@ -50,7 +50,7 @@ st.markdown("""
 <style>
     .verdict-verified   { background:#d4edda; border-left:4px solid #28a745; padding:8px 12px; border-radius:4px; }
     .verdict-inaccurate { background:#fff3cd; border-left:4px solid #ffc107; padding:8px 12px; border-radius:4px; }
-    .verdict-false      { background:#f8d7da; border-left:4px solid #dc3545; padding:8px 12px; border-radius:4px; }
+    .verdict-false      { background:#e77781; border-left:4px solid #dc3545; padding:8px 12px; border-radius:4px; }
     .claim-text { font-size:0.95rem; font-weight:500; margin-bottom:6px; }
     .metric-card {
         border: 1px solid #e0e0e0; border-radius:8px; padding:16px 20px;
